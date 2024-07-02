@@ -81,6 +81,8 @@
         let leftPressed = false;
 
         let interval = 0;
+        let score = 0;
+
 
         const brickRowCount = 3;
         const brickColumnCount = 5;
@@ -91,10 +93,14 @@
         const brickOffsetLeft = 30;
 
         let bricks = [];
-        for (let c = 0; c < brickColumnCount; c++) {
-        bricks[c] = [];
-        for (let r = 0; r < brickRowCount; r++) {
-            bricks[c][r] = { x: 0, y: 0, status: 1 };
+        createBricks();
+        function createBricks()
+        {
+            for (let c = 0; c < brickColumnCount; c++) {
+                bricks[c] = [];
+            for (let r = 0; r < brickRowCount; r++) {
+                bricks[c][r] = { x: 0, y: 0, status: 1 };
+            }
         }
         }
 
@@ -117,36 +123,47 @@
         }
         }
         function collisionDetection() {
-        for (let c = 0; c < brickColumnCount; c++) {
-            for (let r = 0; r < brickRowCount; r++) {
-            let b = bricks[c][r];
-            if (b.status == 1) {
-                if (
-                x > b.x &&
-                x < b.x + brickWidth &&
-                y > b.y &&
-                y < b.y + brickHeight
-                ) {
-                dy = -dy;
-                b.status = 0;
+            for (let c = 0; c < brickColumnCount; c++) {
+                for (let r = 0; r < brickRowCount; r++) {
+                let b = bricks[c][r];
+                if (b.status == 1) {
+                    if (
+                    x > b.x &&
+                    x < b.x + brickWidth &&
+                    y > b.y &&
+                    y < b.y + brickHeight
+                    ) {
+                    dy = -dy;
+                    b.status = 0;
+                    score++;
+                    if (score == 15) {
+                        console.log("Hi");
+                        createBricks(); // Needed for Chrome to end game
+                    }
+                    }
+                }
                 }
             }
-            }
         }
+        function drawScore() {
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#0095DD";
+            ctx.fillText(`Score: ${score}`, 8, 20);
         }
+
         function drawBall() {
-        ctx.beginPath();
-        ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
-        ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
         }
         function drawPaddle() {
-        ctx.beginPath();
-        ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
-        ctx.closePath();
+            ctx.beginPath();
+            ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
         }
         function drawBricks() {
         for (let c = 0; c < brickColumnCount; c++) {
@@ -171,6 +188,7 @@
         drawBricks();
         drawBall();
         drawPaddle();
+        drawScore();
         collisionDetection();
 
         if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
