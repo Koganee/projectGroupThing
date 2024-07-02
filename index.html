@@ -39,7 +39,7 @@
         <input type="text" name ="fName" id="fName" size = "20">
         <button type="submit" id = "submitName">Submit</button>
     </form>
-    
+    <iframe id = "motivation" width="520" height="315" src="https://www.youtube.com/embed/AlLhMySQTlo" frameborder="0"></iframe>
     <script>
         const form = document.getElementById('userForm');
         form.addEventListener('submit', function(e) {
@@ -82,6 +82,8 @@
 
         let interval = 0;
         let score = 0;
+        let combo = 1;
+        let paused = false;
 
 
         const brickRowCount = 3;
@@ -136,9 +138,18 @@
                     dy = -dy;
                     b.status = 0;
                     score++;
-                    if (score == 15) {
+                    if (score % 15 == 0) {
                         console.log("Hi");
-                        createBricks(); // Needed for Chrome to end game
+                        setTimeout(() => {
+                            createBricks();
+                        }, "3000");
+                    }
+                    if (score % 5 == 0) {
+                        combo = combo * 2;
+                    }
+                    if (combo == 2) {
+                        //Pause Game Here
+                        togglePause();
                     }
                     }
                 }
@@ -220,7 +231,23 @@
 
         function startGame() {
         interval = setInterval(draw, 10);
+
+
+        
         }
+        var video = document.getElementById("motivation");
+        video.style.display = "none"
+        function togglePause() {
+            paused = !paused;
+            if (!paused) {
+                interval = setInterval(draw, 10); // Resume the game
+            } else {
+                clearInterval(interval); // Pause the game
+            }
+
+            video.style.display = "block";
+        }
+
 
         document.getElementById("runButton").addEventListener("click", function () {
         startGame();
