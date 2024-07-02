@@ -11,7 +11,7 @@ const port = 8080;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-const uri = "mongodb+srv://u230351:cs230@cluster0.nuzoses.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 //const url = 'mongodb://localhost:27017';
 const dbName = 'BreakoutUserData';
