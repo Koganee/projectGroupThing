@@ -9,8 +9,17 @@
         padding: 0;
         margin: 0;
       }
-    canvas {
+    #myCanvas{
         background: #eee;
+        position: absolute;
+        top:0%;
+        left: 30%;
+    }
+    #myCanvas2{
+        background: #eee;
+        position: absolute;
+        top:0%;
+        left: 30%;
     }
     button {
         display: block;
@@ -18,27 +27,52 @@
     #userForm
     {
         position: absolute;
-        top:20%;
+        top:40%;
         left: 30%;
     }
     #fNameL
     {
         position: absolute;
-        top:18%;
+        top:38%;
         left: 30%;
+    }  
+    @font-face { font-family: GolddenStateSerif; src: url('GoldenStateSerifPERSONAL-Black.otf'); } 
+    #gameEnd{
+        font-family: GoldenStateSerif;
+        position: absolute;
+        top:15%;
+        left: 40%;
+        color: red;
+    }
+    #runButton
+    {
+        position: absolute;
+        top:35%;
+        left: 40%;
+    }
+    #endButton
+    {
+        position: absolute;
+        top:38%;
+        left: 40.1%;
     }
 
     </style>
   </head>
   <body>
     <canvas id="myCanvas" width="480" height="320"></canvas>
+    <canvas id="myCanvas2" width="480" height="320"></canvas>
     <button id="runButton">Start game</button>
-
+    <button id="endButton">End game</button>
+    <p id = "gameEnd">GAME OVER</p>
     <p id = "fNameL">Enter Username:</p>
     <form id = "userForm">
         <input type="text" name ="fName" id="fName" size = "20">
         <button type="submit" id = "submitName">Submit</button>
     </form>
+    <audio controls autoplay>
+        <source src="C:\Users\Aaron\Downloads\mha.mp3" type="audio/mpeg">
+    </audio> 
     <iframe id = "motivation" width="520" height="315" src="https://www.youtube.com/embed/AlLhMySQTlo" frameborder="0"></iframe>
     <script>
         const form = document.getElementById('userForm');
@@ -65,7 +99,14 @@
 
     <script>
         const canvas = document.getElementById("myCanvas");
+        const canvas2 = document.getElementById("myCanvas2");
+        const gameEndP = document.getElementById("gameEnd");
+        const endButtonB = document.getElementById("endButton")
+        canvas2.style.display="none";
+        gameEndP.style.display="none";
+        endButtonB.style.display="none";
         const ctx = canvas.getContext("2d");
+        const ctx2 = canvas2.getContext("2d");
         const ballRadius = 10;
 
         let x = canvas.width / 2;
@@ -74,7 +115,7 @@
         let dy = -2;
 
         const paddleHeight = 10;
-        const paddleWidth = 75;
+        const paddleWidth = 100;
 
         let paddleX = (canvas.width - paddleWidth) / 2;
         let rightPressed = false;
@@ -93,6 +134,12 @@
         const brickPadding = 10;
         const brickOffsetTop = 30;
         const brickOffsetLeft = 30;
+
+        let flashInterval;
+        let flashCount = 0;
+        const maxFlashes = 10;
+
+        let gameOverV = false;
 
         let bricks = [];
         createBricks();
@@ -125,10 +172,10 @@
         }
         }
         function collisionDetection() {
-            for (let c = 0; c < brickColumnCount; c++) {
-                for (let r = 0; r < brickRowCount; r++) {
+            for(let c = 0; c < brickColumnCount; c++) {
+                for(let r = 0; r < brickRowCount; r++) {
                 let b = bricks[c][r];
-                if (b.status == 1) {
+                if(b.status == 1) {
                     if (
                     x > b.x &&
                     x < b.x + brickWidth &&
@@ -138,16 +185,18 @@
                     dy = -dy;
                     b.status = 0;
                     score++;
-                    if (score % 15 == 0) {
+                    if(score % 15 == 0) {
                         console.log("Hi");
                         setTimeout(() => {
                             createBricks();
                         }, "3000");
                     }
-                    if (score % 5 == 0) {
+                    if(score % 5 == 0) {
                         combo = combo * 2;
+                        dx = dx + 0.25;
+                        dy = dy + 0.25;
                     }
-                    if (combo == 2) {
+                    if(combo == 2) {
                         //Pause Game Here
                         togglePause();
                     }
@@ -195,6 +244,8 @@
         }
 
         function draw() {
+        if (gameOverV) return;
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBricks();
         drawBall();
@@ -213,9 +264,12 @@
                 dy = -dy;
             }
             } else {
-            alert("GAME OVER");
-            document.location.reload();
-            clearInterval(interval); // Needed for Chrome to end game
+                gameOverV = true;
+                flashScreenDeath();
+                //gameOver();
+                //alert("GAME OVER");
+                //document.location.reload();
+                clearInterval(interval); // Needed for Chrome to end game
             }
         }
 
@@ -245,12 +299,64 @@
                 clearInterval(interval); // Pause the game
             }
 
-            video.style.display = "block";
+            //video.style.display = "block";
+            flashScreen();
         }
 
-
+        function flashScreen()
+        {
+            canvas.style.display = "none";
+            canvas2.style.display = "block";
+            flashCount = 0;
+            flashInterval = setInterval(() => {
+                if (flashCount >= maxFlashes) {
+                    clearInterval(flashInterval);
+                    return;
+                }
+                if (flashCount % 2 === 0) {
+                    ctx2.fillStyle = "black";
+                } else {
+                    ctx2.fillStyle = "white";
+                }
+                ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+                flashCount++;
+            }, 100);
+        }
+        function flashScreenDeath()
+        {
+            canvas.style.display = "none";
+            canvas2.style.display = "block";
+            gameEndP.style.display="block";
+            flashCount = 0;
+            flashInterval = setInterval(() => {
+                if (flashCount >= maxFlashes) {
+                    clearInterval(flashInterval);
+                    return;
+                }
+                if (flashCount % 2 === 0) {
+                    ctx2.fillStyle = "black";
+                } else {
+                    ctx2.fillStyle = "white";
+                }
+                ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+                flashCount++;
+            }, 100);
+            endButtonB.style.display="block";
+            //gameOver();
+        }
+        function gameOver()
+        {
+            alert("GAME OVER");
+            document.location.reload();
+            clearInterval(interval);
+        }
         document.getElementById("runButton").addEventListener("click", function () {
         startGame();
+        this.disabled = true;
+        });
+
+        document.getElementById("endButton").addEventListener("click", function () {
+        gameOver();
         this.disabled = true;
         });
 
