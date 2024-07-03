@@ -41,7 +41,7 @@
         font-family: GoldenStateSerif;
         position: absolute;
         top:15%;
-        left: 40%;
+        left: 39.1%;
         color: red;
     }
     #runButton
@@ -56,16 +56,32 @@
         top:38%;
         left: 40.1%;
     }
-
+    #enterName
+    {
+        position: absolute;
+        top:30%;
+        left: 37.1%;
+    }
+    #enterNameLabel
+    {
+        position: absolute;
+        top:28%;
+        left: 37.1%;
+        color: red;
+    }
     </style>
   </head>
   <body>
     <canvas id="myCanvas" width="480" height="320"></canvas>
     <canvas id="myCanvas2" width="480" height="320"></canvas>
+
+
     <button id="runButton">Start game</button>
     <button id="endButton">End game</button>
-    <button id="pauseButton">Pause game</button>
 
+
+    <input type="text" id = "enterName"/></input> <!--Button that will appear to enter username after game end. -->
+    <p id = "enterNameLabel">Save Username:</p>
 
     <p id = "gameEnd">GAME OVER</p>
     <p id = "fNameL">Enter Username:</p>
@@ -104,10 +120,16 @@
         const canvas = document.getElementById("myCanvas");
         const canvas2 = document.getElementById("myCanvas2");
         const gameEndP = document.getElementById("gameEnd");
-        const endButtonB = document.getElementById("endButton")
-        canvas2.style.display="none";
-        gameEndP.style.display="none";
-        endButtonB.style.display="none";
+        const endButtonB = document.getElementById("endButton");
+        const enterName = document.getElementById("enterName");
+        const enterNameLabel = document.getElementById("enterNameLabel");
+
+        canvas2.style.display="none"; //Hidden by default.
+        gameEndP.style.display="none"; //Hidden by default.
+        endButtonB.style.display="none"; //Hidden by default.
+        enterName.style.display="none"; //Hidden by default.
+        enterNameLabel.style.display="none"; //Hidden by default.
+
         const ctx = canvas.getContext("2d");
         const ctx2 = canvas2.getContext("2d");
         const ballRadius = 10;
@@ -276,6 +298,7 @@
             } else {
                 gameOverV = true;
                 flashScreenDeath();
+                showEnterUserName();
                 shakeCanvas(500, 10, canvas2); //Shake canvas upon game over. (Time, Intensity, CanavsToShake).
                 
                 clearInterval(interval); // Needed for Chrome to end game
@@ -394,6 +417,12 @@
             shake();
         }   
         //Shake Effect-----------------------------------
+
+        function showEnterUserName()
+        {
+            enterNameLabel.style.display="block";
+            enterName.style.display = "block";
+        }
 
     </script>
   </body>
