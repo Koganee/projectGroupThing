@@ -69,6 +69,12 @@
         left: 37.1%;
         color: red;
     }
+    #enterDataButton
+    {
+        position: absolute;
+        top:30%;
+        left: 46%;
+    }
     </style>
   </head>
   <body>
@@ -78,6 +84,7 @@
 
     <button id="runButton">Start game</button>
     <button id="endButton">End game</button>
+    <button id="enterDataButton" onclick = "saveUserName()">Submit</button> <!--Button that will appear to enter username after game end. -->
 
 
     <input type="text" id = "enterName"/></input> <!--Button that will appear to enter username after game end. -->
@@ -109,6 +116,15 @@
             .catch(err => console.log(err))
             
         });
+
+        function saveUserName()
+        {
+            const data = {username: document.getElementById('enterName').value};
+            console.log(data);
+            axios.post('http://localhost:8080/addUser', data)
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+        }
     </script>
 
 
@@ -225,8 +241,8 @@
                     }
                     if(score % 5 == 0) {
                         combo = combo * 2;
-                        dx = dx + 0.25;
-                        dy = dy + 0.25;
+                        dx = dx + 0.5;
+                        dy = dy + 0.5;
                     }
                     if(combo == 2) {
                         //Pause Game Here

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+    #scoreCanvas{
+        background: #eee;
+        position: absolute;
+        top:0%;
+        left: 30%;
+    }
+    #endButton
+    {
+        position: absolute;
+        top:38%;
+        left: 40.1%;
+    }
+    </style>
+  </head>
+  <body>
+    <canvas id="scoreCanvas" width="480" height="320"></canvas>
+
+    <button id="endButton">End game</button>
+    <script>
+        
+    </script>
+
+    <script>
+        const canvas = document.getElementById("myCanvas");
+
+        const endButtonB = document.getElementById("endButton");
+
+        let interval = 0;
+        function redirectToPage() {
+            window.location.href = 'testscreen.html';
+        }
+
+        function gameOver()
+        {
+            alert("GAME OVER");
+            document.location.reload();
+            clearInterval(interval);
+            redirectToPage();
+        }
+
+        document.getElementById("endButton").addEventListener("click", function () {
+            gameOver();
+            this.disabled = true;
+        });
+
+    </script>
+  </body>
+</html>

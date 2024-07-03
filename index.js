@@ -11,12 +11,13 @@ const port = 8080;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-//const url = 'mongodb://localhost:27017';
+const url = 'mongodb://localhost:27017';
 const dbName = 'BreakoutUserData';
 
-const client = new MongoClient(uri, {
+const client = new MongoClient(url, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
