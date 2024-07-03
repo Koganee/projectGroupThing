@@ -15,6 +15,7 @@
         position: absolute;
         top:0%;
         left: 30%;
+        background-image: url("img\\BreakoutBackground.png");
     }
     #myCanvas2{
         background: #eee;
@@ -87,6 +88,7 @@
     <button id="endButton">End game</button>
     <button id="enterDataButton" onclick = "saveUserName()">Submit</button> <!--Button that will appear to enter username after game end. -->
 
+    <img src ="img\\BreakoutBlock.png" id = "imgBrick"></img>
 
     <input type="text" id = "enterName"/></input> <!--Button that will appear to enter username after game end. -->
     <p id = "enterNameLabel">Save Username:</p>
@@ -158,6 +160,8 @@
 
         const paddleHeight = 10;
         const paddleWidth = 100;
+
+        const imgBrick = document.getElementById("imgBrick");
 
         let paddleX = (canvas.width - paddleWidth) / 2;
         let rightPressed = false;
@@ -296,6 +300,7 @@
                 ctx.fillStyle = "#0095DD";
                 ctx.fill();
                 ctx.closePath();
+                ctx.drawImage(imgBrick, brickX, brickY, brickWidth, brickHeight);
             }
             }
         }
