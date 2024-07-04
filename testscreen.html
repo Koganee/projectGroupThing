@@ -46,6 +46,13 @@
         left: 39.1%;
         color: red;
     }
+    #gameGuard{
+        font-family: GoldenStateSerif;
+        position: absolute;
+        top:15%;
+        left: 39.1%;
+        color: red;
+    }
     #runButton
     {
         position: absolute;
@@ -98,6 +105,7 @@
     <p id = "enterNameLabel">Save Username:</p>
 
     <p id = "gameEnd">GAME OVER</p>
+    <p id = "gameGuard">GUARD INCOMING</p>
     <p id = "fNameL">Enter Username:</p>
     <form id = "userForm">
         <input type="text" name ="fName" id="fName" size = "20">
@@ -142,7 +150,9 @@
         const endButtonB = document.getElementById("endButton");
         const enterName = document.getElementById("enterName");
         const enterNameLabel = document.getElementById("enterNameLabel");
+        const gameGuardP = document.getElementById("gameGuard");
 
+        gameGuardP.style.display="none"; //Hidden by default.
         canvas2.style.display="none"; //Hidden by default.
         gameEndP.style.display="none"; //Hidden by default.
         endButtonB.style.display="none"; //Hidden by default.
@@ -245,16 +255,10 @@
         }
         }
 
-        async function randomNumber()
+        function randomNumber()
         {
-            var dice = Math.floor(Math.random() * 6);
-            if(dice == 4 || dice == 2)
-            {
-                console.log(dice);
-                    
-                randomChanceGuard();
-                    
-            }
+            return Math.floor(Math.random() * 6);
+            
         }
 
 
@@ -276,13 +280,20 @@
                     testValue2 = 0;
 
                     snd.play();
-                    shakeCanvas(500, 3, canvas); //Shakes Canvas upon block break. (Time, Intensity, CanavsToShake).
+                    shakeCanvas(500, 3, canvas); //Shakes Canvas upon block break. (Time, Intensity, CanvasToShake).
                     var previousScore = score;
                     score++;
-                    
-                    if(score != previousScore)
+
+
+                    let valueDice = randomNumber();
+                    console.log(valueDice);
+                    if((valueDice == 4))
                     {
-                        randomNumber();
+                        gameGuardP.style.display = "block";
+                        setTimeout(() => {
+                            randomChanceGuard();
+                            gameGuardP.style.display = "none";
+                        }, "3000");
                     }
                     
                     
@@ -295,7 +306,7 @@
                     }
                     if(score % 5 == 0 && score !== lastScoreCheck) {
                         combo = combo * 2;
-                        
+                        //randomChanceGuard();
                         //dx = dx + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
                         //dy = dy + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
                     }
@@ -431,11 +442,11 @@
             drawScore();
             collisionDetection();
 
-            if(testValue == 0)
-            {
-                testValue++;
-                randomChanceGuard();
-            }
+            //if(testValue == 0)
+            //{
+            //    testValue++;
+            //    randomChanceGuard();
+            // }
             if(keyPressedJump && testValue2 == 0) //Code may break here if edited. EDIT: IT WILL CRASH VS CODE.
             {                                     //This code is preventing a second jump, however glitches if removed.
                 testValue2++;
@@ -596,28 +607,26 @@
 
 
 
-        async function randomChanceGuard() //Guard Animation - Randomly spawns.
+        function randomChanceGuard() //Guard Animation - Randomly spawns.
         {
             //testValue2 = 0;
-            if(score == 5)
+            
+            ctx.drawImage(imgGuard, moveX, 320, 40, 40);
+
+            moveX += 2; // Increment the x position. MUST STAY AS 1!!!
+
+            if(moveX == paddleX && (moveYPaddle < 320 && moveYPaddle > 280))
             {
-                ctx.drawImage(imgGuard, moveX, 320, 40, 40);
-
-                moveX += 1; // Increment the x position. MUST STAY AS 1!!!
-
-                if(moveX == paddleX)
-                {
-                    flashScreenDeath();
-                }
-
-                if (moveX < canvas.width) {
-                    requestAnimationFrame(randomChanceGuard); // Continue the animation
-                } else {
-                    moveX = -35; // Reset the position if the guard reaches the end of the canvas
-                    //requestAnimationFrame(randomChanceGuard); // Restart the animation
-                }
-
+                flashScreenDeath();
             }
+
+            if (moveX < canvas.width) {
+                requestAnimationFrame(randomChanceGuard); // Continue the animation
+            } else {
+                moveX = -35; // Reset the position if the guard reaches the end of the canvas
+                //requestAnimationFrame(randomChanceGuard); // Restart the animation
+            }
+
         }
 
         
