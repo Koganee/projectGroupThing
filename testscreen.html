@@ -190,6 +190,7 @@
         let flashInterval;
         let flashCount = 0;
         const maxFlashes = 29;
+        let lastScoreCheck = 0;
 
         let gameOverV = false;
 
@@ -259,15 +260,16 @@
                             createBricks();
                         }, "3000");
                     }
-                    if(score % 5 == 0) {
+                    if(score % 5 == 0 && score !== lastScoreCheck) {
                         combo = combo * 2;
-                        dx = dx + 0.5;
-                        dy = dy + 0.5;
+                        //dx = dx + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
+                        //dy = dy + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
                     }
                     if(combo == 2) {
                         //Pause Game Here
                         //togglePause();
                     }
+                    lastScoreCheck = score;
                     }
                 }
                 }
