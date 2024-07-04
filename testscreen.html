@@ -90,6 +90,8 @@
 
     <img src ="img\\BreakoutBlock.png" id = "imgBrick"></img>
     <img src ="img\\BreakoutPrisoner.png" id = "imgPrisoner"></img>
+    <img src ="img\\BreakoutPaddle.png" id = "imgPaddle"></img>
+    <img src ="img\\BreakoutBall.png" id = "imgBall"></img>
 
     <input type="text" id = "enterName"/></input> <!--Button that will appear to enter username after game end. -->
     <p id = "enterNameLabel">Save Username:</p>
@@ -164,6 +166,8 @@
 
         const imgBrick = document.getElementById("imgBrick");
         const imgPrisoner = document.getElementById("imgPrisoner");
+        const imgPaddle = document.getElementById("imgPaddle");
+        const imgBall = document.getElementById("imgBall");
 
         let paddleX = (canvas.width - paddleWidth) / 2;
         let rightPressed = false;
@@ -279,8 +283,9 @@
             ctx.beginPath();
             ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
             ctx.fillStyle = "#0095DD";
-            ctx.fill();
+            //ctx.fill();  //.fill may be removed to remove original basic texture.
             ctx.closePath();
+            ctx.drawImage(imgBall, x-10, y-10, 20, 20);
         }
         function drawPaddle() {
             ctx.beginPath();
@@ -290,6 +295,7 @@
             ctx.fill();
             ctx.closePath();
             ctx.drawImage(imgPrisoner, paddleX + 30, 320, 40, 40);
+            ctx.drawImage(imgPaddle, paddleX, 310, paddleWidth, paddleHeight + 30);
         }
         function drawBricks() {
         for (let c = 0; c < brickColumnCount; c++) {
@@ -326,7 +332,7 @@
         if (y + dy < ballRadius) {
             dy = -dy;
         } 
-        else if (y + dy > 320 - ballRadius && y + dy < 320) 
+        else if (y + dy > 320 - ballRadius && y + dy < 320) //Kinda complicated but this allows the ball to bounce off the paddle only when it is at the paddle level.
         {
             if (x > paddleX && x < paddleX + paddleWidth) 
             {
@@ -337,7 +343,7 @@
             } 
             
         }
-        if(y == canvas.height)
+        if(y == canvas.height) //Automatic endgame.
         {
             gameOverV = true;
             flashScreenDeath();
