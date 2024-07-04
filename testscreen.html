@@ -244,6 +244,9 @@
         } else if (e.key == "Left" || e.key == "ArrowLeft") {
             leftPressed = false;
         }
+        else if (e.key == " ") {
+            keyPressedJump = false;
+        }
         }
         function collisionDetection() {
             snd.preload = "auto"; 
@@ -260,6 +263,7 @@
                     ) {
                     dy = -dy;
                     b.status = 0;
+                    testValue2 = 0;
 
                     snd.play();
                     shakeCanvas(500, 3, canvas); //Shakes Canvas upon block break. (Time, Intensity, CanavsToShake).
@@ -301,6 +305,10 @@
             ctx.closePath();
             ctx.drawImage(imgBall, x-10, y-10, 20, 20);
         }
+
+        let moveYPaddle = 310;
+        let moveYPrisoner = 320;
+
         function drawPaddle() {
             ctx.beginPath();
             //ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
@@ -308,33 +316,66 @@
             ctx.fillStyle = "#0095DD";
             ctx.fill();
             ctx.closePath();
-            ctx.drawImage(imgPrisoner, paddleX + 30, 320, 40, 40);
-            ctx.drawImage(imgPaddle, paddleX, 310, paddleWidth, paddleHeight + 30);
+            ctx.drawImage(imgPrisoner, paddleX + 30, moveYPrisoner, 40, 40);
+            ctx.drawImage(imgPaddle, paddleX, moveYPaddle, paddleWidth, paddleHeight + 30);
             
         }
 
-        let jumpSpeed = 10; // Initial speed for jumping up
+        let jumpSpeed = 2; // Initial speed for jumping up
         let gravity = 0.5;
 
         function jump() //Idk how to get this to work.
         {
-            moveY -= jumpSpeed;
-            jumpSpeed += gravity;
+            testValue2--;
+            moveYPaddle -= jumpSpeed;
+            moveYPrisoner -= jumpSpeed;
+            //jumpSpeed += gravity;
 
-            if(moveY > 200)
+            if(moveYPaddle > 200)
             {
-                ctx.drawImage(imgPaddle, paddleX, moveY, paddleWidth, paddleHeight + 30);
-                ctx.drawImage(imgPrisoner, paddleX + 30, moveY, 40, 40);
-
-                keyPressedJump = false;
+                console.log(moveYPaddle);
+                ctx.drawImage(imgPaddle, paddleX, moveYPaddle, paddleWidth, paddleHeight + 30);
+                ctx.drawImage(imgPrisoner, paddleX + 30, moveYPrisoner, 40, 40);
+                ctx.beginPath();
+                ctx.rect(paddleX, moveYPaddle, paddleWidth, paddleHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
 
                 requestAnimationFrame(jump);
                 
             }
             else 
             {
-                moveY = 360;
-                jumpPossible = false; // Reset the position if the guard reaches the end of the canvas
+                function reverseJump()
+                {
+                    console.log("Hi" + moveYPaddle);
+                    //keyPressedJump = false;
+                    jumpSpeed = 2;
+                    if(moveYPrisoner < 320)
+                    {
+                        console.log("Hi" + moveYPaddle);
+                        moveYPaddle += jumpSpeed;
+                        moveYPrisoner += jumpSpeed;
+
+                        ctx.drawImage(imgPaddle, paddleX, moveYPaddle, paddleWidth, paddleHeight + 30);
+                        ctx.drawImage(imgPrisoner, paddleX + 30, moveYPrisoner, 40, 40);
+                        ctx.beginPath();
+                        ctx.rect(paddleX, moveYPaddle, paddleWidth, paddleHeight);
+                        ctx.fillStyle = "#0095DD";
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                    else
+                    {
+                        drawPaddle();
+                    }
+                    requestAnimationFrame(reverseJump);
+                }
+                requestAnimationFrame(reverseJump);
+                //moveYPaddle = 310;
+                //moveYPrisoner = 320;
+                //jumpPossible = false; // Reset the position if the guard reaches the end of the canvas
                 //requestAnimationFrame(randomChanceGuard); // Restart the animation
             }
         }
@@ -376,8 +417,9 @@
                 testValue++;
                 randomChanceGuard();
             }
-            if(keyPressedJump)
-            {
+            if(keyPressedJump && testValue2 == 0) //Code may break here if edited. EDIT: IT WILL CRASH VS CODE.
+            {                                     //This code is preventing a second jump, however glitches if removed.
+                testValue2++;
                 jump();
             }
             //jump();
@@ -540,6 +582,7 @@
 
         function randomChanceGuard() //Guard Animation - Randomly spawns.
         {
+            testValue2 = 0;
             if(score == 5)
             {
                 ctx.drawImage(imgGuard, moveX, 320, 40, 40);
