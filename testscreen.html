@@ -310,12 +310,12 @@
         let moveYPrisoner = 320;
 
         function drawPaddle() {
-            ctx.beginPath();
+            //ctx.beginPath();                                                              //wILL BREAK CODE.
             //ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-            ctx.rect(paddleX, 310, paddleWidth, paddleHeight);
-            ctx.fillStyle = "#0095DD";
-            ctx.fill();
-            ctx.closePath();
+            //ctx.rect(paddleX, 310, paddleWidth, paddleHeight);
+            //ctx.fillStyle = "#0095DD";
+            //ctx.fill();
+            //ctx.closePath();
             ctx.drawImage(imgPrisoner, paddleX + 30, moveYPrisoner, 40, 40);
             ctx.drawImage(imgPaddle, paddleX, moveYPaddle, paddleWidth, paddleHeight + 30);
             
@@ -365,12 +365,13 @@
                         ctx.fillStyle = "#0095DD";
                         ctx.fill();
                         ctx.closePath();
+
+                        requestAnimationFrame(reverseJump);
                     }
                     else
                     {
                         drawPaddle();
                     }
-                    requestAnimationFrame(reverseJump);
                 }
                 requestAnimationFrame(reverseJump);
                 //moveYPaddle = 310;
