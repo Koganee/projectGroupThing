@@ -244,6 +244,20 @@
             keyPressedJump = false;
         }
         }
+
+        async function randomNumber()
+        {
+            var dice = Math.floor(Math.random() * 6);
+            if(dice == 4 || dice == 2)
+            {
+                console.log(dice);
+                    
+                randomChanceGuard();
+                    
+            }
+        }
+
+
         function collisionDetection() {
             snd.preload = "auto"; 
             for(let c = 0; c < brickColumnCount; c++) {
@@ -263,8 +277,16 @@
 
                     snd.play();
                     shakeCanvas(500, 3, canvas); //Shakes Canvas upon block break. (Time, Intensity, CanavsToShake).
-
+                    var previousScore = score;
                     score++;
+                    
+                    if(score != previousScore)
+                    {
+                        randomNumber();
+                    }
+                    
+                    
+
                     if(score % 15 == 0) {
                         console.log("Hi");
                         setTimeout(() => {
@@ -273,7 +295,7 @@
                     }
                     if(score % 5 == 0 && score !== lastScoreCheck) {
                         combo = combo * 2;
-                        randomChanceGuard();
+                        
                         //dx = dx + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
                         //dy = dy + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
                     }
@@ -466,9 +488,6 @@
             interval = setInterval(draw, 10);
         }
 
-        var video = document.getElementById("motivation");
-        video.style.display = "none"
-
         function togglePause() {
             paused = !paused;
             if (!paused) {
@@ -577,9 +596,9 @@
 
 
 
-        function randomChanceGuard() //Guard Animation - Randomly spawns.
+        async function randomChanceGuard() //Guard Animation - Randomly spawns.
         {
-            testValue2 = 0;
+            //testValue2 = 0;
             if(score == 5)
             {
                 ctx.drawImage(imgGuard, moveX, 320, 40, 40);
