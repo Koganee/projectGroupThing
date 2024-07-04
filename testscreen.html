@@ -92,6 +92,7 @@
     <img src ="img\\BreakoutPrisoner.png" id = "imgPrisoner"></img>
     <img src ="img\\BreakoutPaddle.png" id = "imgPaddle"></img>
     <img src ="img\\BreakoutBall.png" id = "imgBall"></img>
+    <img src ="img\\BreakoutGuard.png" id = "imgGuard"></img>
 
     <input type="text" id = "enterName"/></input> <!--Button that will appear to enter username after game end. -->
     <p id = "enterNameLabel">Save Username:</p>
@@ -168,6 +169,7 @@
         const imgPrisoner = document.getElementById("imgPrisoner");
         const imgPaddle = document.getElementById("imgPaddle");
         const imgBall = document.getElementById("imgBall");
+        const imgGuard = document.getElementById("imgGuard");
 
         let paddleX = (canvas.width - paddleWidth) / 2;
         let rightPressed = false;
@@ -191,8 +193,11 @@
         let flashCount = 0;
         const maxFlashes = 29;
         let lastScoreCheck = 0;
+        let moveX = -35;
+        let moveY = 360;
 
         let gameOverV = false;
+        const jumpPossible = true;
 
         var snd = new Audio("audio\\blockBreak.mp3");
         var sndFail = new Audio("audio\\fail.mp3");
@@ -224,6 +229,10 @@
 
         if ( e.key == "Escape") {
             togglePause();
+        }
+        if ( e.key == " ") {
+            //jumpPossible = true;
+            requestAnimationFrame(jump);
         }
         }
 
@@ -262,6 +271,7 @@
                     }
                     if(score % 5 == 0 && score !== lastScoreCheck) {
                         combo = combo * 2;
+                        randomChanceGuard();
                         //dx = dx + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
                         //dy = dy + 0.5;  //DO NOT UNCOMMENT, GAME WILL BREAK AT SCORE OF 5!!!
                     }
@@ -272,8 +282,8 @@
                     lastScoreCheck = score;
                     }
                 }
-                }
             }
+        }
         }
         function drawScore() {
             ctx.font = "16px Arial";
@@ -298,7 +308,32 @@
             ctx.closePath();
             ctx.drawImage(imgPrisoner, paddleX + 30, 320, 40, 40);
             ctx.drawImage(imgPaddle, paddleX, 310, paddleWidth, paddleHeight + 30);
+            
         }
+
+        let jumpSpeed = 10; // Initial speed for jumping up
+        let gravity = 0.5;
+
+        function jump() //Idk how to get this to work.
+        {
+            if(moveY > 200)
+            {
+                ctx.drawImage(imgPaddle, paddleX, moveY, paddleWidth, paddleHeight + 30);
+                ctx.drawImage(imgPrisoner, paddleX + 30, moveY, 40, 40);
+
+                moveY -= jumpSpeed;
+                jumpSpeed += gravity;
+
+                requestAnimationFrame(jump);
+                
+            }
+            else 
+            {
+                moveY = 360; // Reset the position if the guard reaches the end of the canvas
+                //requestAnimationFrame(randomChanceGuard); // Restart the animation
+            }
+        }
+
         function drawBricks() {
         for (let c = 0; c < brickColumnCount; c++) {
             for (let r = 0; r < brickRowCount; r++) {
@@ -318,6 +353,9 @@
         }
         }
 
+        let testValue = 0;
+        let testValue2 = 0;
+
         function draw() {
         if (gameOverV) return;
 
@@ -327,6 +365,20 @@
         drawPaddle();
         drawScore();
         collisionDetection();
+
+        if(testValue == 0)
+        {
+            testValue++;
+            randomChanceGuard();
+        }
+        if(testValue2 == 0)
+        {
+            testValue2++;
+            jump();
+        }
+        //jump();
+        
+
 
         if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
             dx = -dx;
@@ -479,6 +531,33 @@
             enterNameLabel.style.display="block";
             enterName.style.display = "block";
         }
+
+
+
+        function randomChanceGuard() //Guard Animation - Randomly spawns.
+        {
+            if(score == 5)
+            {
+                ctx.drawImage(imgGuard, moveX, 320, 40, 40);
+
+                moveX += 1; // Increment the x position. MUST STAY AS 1!!!
+
+                if(moveX == paddleX)
+                {
+                    flashScreenDeath();
+                }
+
+                if (moveX < canvas.width) {
+                    requestAnimationFrame(randomChanceGuard); // Continue the animation
+                } else {
+                    moveX = -35; // Reset the position if the guard reaches the end of the canvas
+                    //requestAnimationFrame(randomChanceGuard); // Restart the animation
+                }
+
+            }
+        }
+
+        
 
     </script>
   </body>
