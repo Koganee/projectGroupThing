@@ -197,11 +197,12 @@
         let moveY = 360;
 
         let gameOverV = false;
-        const jumpPossible = true;
 
         var snd = new Audio("audio\\blockBreak.mp3");
         var sndFail = new Audio("audio\\fail.mp3");
         var sndLoop = new Audio("audio\\loop.mp3");
+
+        var keyPressedJump = false;
 
         let bricks = [];
         createBricks();
@@ -232,7 +233,8 @@
         }
         if ( e.key == " ") {
             //jumpPossible = true;
-            requestAnimationFrame(jump);
+            keyPressedJump = true;
+            //requestAnimationFrame(jump);
         }
         }
 
@@ -316,20 +318,23 @@
 
         function jump() //Idk how to get this to work.
         {
+            moveY -= jumpSpeed;
+            jumpSpeed += gravity;
+
             if(moveY > 200)
             {
                 ctx.drawImage(imgPaddle, paddleX, moveY, paddleWidth, paddleHeight + 30);
                 ctx.drawImage(imgPrisoner, paddleX + 30, moveY, 40, 40);
 
-                moveY -= jumpSpeed;
-                jumpSpeed += gravity;
+                keyPressedJump = false;
 
                 requestAnimationFrame(jump);
                 
             }
             else 
             {
-                moveY = 360; // Reset the position if the guard reaches the end of the canvas
+                moveY = 360;
+                jumpPossible = false; // Reset the position if the guard reaches the end of the canvas
                 //requestAnimationFrame(randomChanceGuard); // Restart the animation
             }
         }
@@ -357,64 +362,63 @@
         let testValue2 = 0;
 
         function draw() {
-        if (gameOverV) return;
+            if (gameOverV) return;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBricks();
-        drawBall();
-        drawPaddle();
-        drawScore();
-        collisionDetection();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBricks();
+            drawBall();
+            drawPaddle();
+            drawScore();
+            collisionDetection();
 
-        if(testValue == 0)
-        {
-            testValue++;
-            randomChanceGuard();
-        }
-        if(testValue2 == 0)
-        {
-            testValue2++;
-            jump();
-        }
-        //jump();
-        
-
-
-        if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-            dx = -dx;
-        }
-        if (y + dy < ballRadius) {
-            dy = -dy;
-        } 
-        else if (y + dy > 320 - ballRadius && y + dy < 320) //Kinda complicated but this allows the ball to bounce off the paddle only when it is at the paddle level.
-        {
-            if (x > paddleX && x < paddleX + paddleWidth) 
+            if(testValue == 0)
             {
-                if ((y = y - paddleHeight)) 
-                {
-                    dy = -dy;
-                }
+                testValue++;
+                randomChanceGuard();
+            }
+            if(keyPressedJump)
+            {
+                jump();
+            }
+            //jump();
+            
+
+
+            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                dx = -dx;
+            }
+            if (y + dy < ballRadius) {
+                dy = -dy;
             } 
-            
-        }
-        if(y == canvas.height) //Automatic endgame.
-        {
-            gameOverV = true;
-            flashScreenDeath();
-            showEnterUserName();
-            shakeCanvas(500, 10, canvas2); //Shake canvas upon game over. (Time, Intensity, CanavsToShake).
-            
-            clearInterval(interval); // Needed for Chrome to end game
-        }
+            else if (y + dy > 320 - ballRadius && y + dy < 320) //Kinda complicated but this allows the ball to bounce off the paddle only when it is at the paddle level.
+            {
+                if (x > paddleX && x < paddleX + paddleWidth) 
+                {
+                    if ((y = y - paddleHeight)) 
+                    {
+                        dy = -dy;
+                    }
+                } 
+                
+            }
+            if(y == canvas.height) //Automatic endgame.
+            {
+                gameOverV = true;
+                flashScreenDeath();
+                showEnterUserName();
+                shakeCanvas(500, 10, canvas2); //Shake canvas upon game over. (Time, Intensity, CanavsToShake).
+                
+                clearInterval(interval); // Needed for Chrome to end game
+            }
 
-        if (rightPressed && paddleX < canvas.width - paddleWidth) {
-            paddleX += 7;
-        } else if (leftPressed && paddleX > 0) {
-            paddleX -= 7;
-        }
+            if (rightPressed && paddleX < canvas.width - paddleWidth) {
+                paddleX += 7;
+            } else if (leftPressed && paddleX > 0) {
+                paddleX -= 7;
+            }
 
-        x += dx;
-        y += dy;
+            x += dx;
+            y += dy;
         }
 
         function startGame() {
