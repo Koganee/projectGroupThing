@@ -3,21 +3,59 @@
   <head>
     <meta charset="utf-8" />
     <title>BreakOut</title>
+    <link rel="stylesheet" href="./node_modules/nes.css/css/nes.min.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
-      * {
-        padding: 0;
-        margin: 0;
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+      html, body, pre, code, kbd, samp {
+          font-family: "Press Start 2P", system-ui;
       }
+      .center-screen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: 100vh;
+      }
+      #progress
+      {
+        width: 30%;
+        position: absolute;
+        top:55%;
+        left: 35%;
+      }
+      
     </style>
     <body>
-        <a href="testscreen.html">Start Game</a>
+      <progress class="nes-progress" id="progress" value="0" max="100"></progress>
+        <a href="testscreen.html" id = "startGame" class="center-screen">Start Game</a>
 
 
         
     </body>
     <script>
-        
+        document.getElementById("startGame").onclick = (event) => {
+            event.preventDefault(); // Prevent default link behavior
+            progressBar();
+        };
+
+        const progress = document.getElementById("progress");
+        let i = 0;
+
+        function progressBar()
+        {
+          if(i < 100)
+          {
+            i = i + 1;
+            progress.value = i; 
+            requestAnimationFrame(progressBar);
+          }
+          else
+          {
+            i = 100;
+            window.location.href = "testscreen.html";
+          }
+        }
 
     </script>
   </body>

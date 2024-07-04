@@ -62,3 +62,7 @@ app.post("/addUser", async(req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });
+
+
+
+import "nes.css/css/nes.min.css";

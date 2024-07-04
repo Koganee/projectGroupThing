@@ -235,7 +235,7 @@
         }
 
         if ( e.key == "Escape") {
-            togglePause();
+            //togglePause();
         }
         if ( e.key == " ") {
             //jumpPossible = true;
@@ -293,7 +293,7 @@
                         setTimeout(() => {
                             randomChanceGuard();
                             gameGuardP.style.display = "none";
-                        }, "3000");
+                        }, "2000");
                     }
                     
                     
@@ -462,7 +462,7 @@
             if (y + dy < ballRadius) {
                 dy = -dy;
             } 
-            else if (y + dy > 320 - ballRadius && y + dy < 320) //Kinda complicated but this allows the ball to bounce off the paddle only when it is at the paddle level.
+            else if (y + dy > moveYPaddle - ballRadius && y + dy < moveYPaddle) //Kinda complicated but this allows the ball to bounce off the paddle only when it is at the paddle level.
             {
                 if (x > paddleX && x < paddleX + paddleWidth) 
                 {
@@ -625,8 +625,7 @@
             } else {
                 moveX = -35; // Reset the position if the guard reaches the end of the canvas
                 //requestAnimationFrame(randomChanceGuard); // Restart the animation
-            }
-
+            } 
         }
 
         
