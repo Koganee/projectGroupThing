@@ -10,18 +10,26 @@
         padding: 0;
         margin: 0;
       }
+    
     #myCanvas{
         background: #eee;
         position: absolute;
         top:0%;
-        left: 30%;
+        left: 38%;
+        background-image: url("img\\BreakoutBackground.png");
+    }
+    #fullBackground{
+        background: #eee;
+        position: absolute;
+        top:0%;
+        left: 0%;
         background-image: url("img\\BreakoutBackground.png");
     }
     #myCanvas2{
         background: #eee;
         position: absolute;
         top:0%;
-        left: 30%;
+        left: 38%;
     }
     button {
         display: block;
@@ -43,53 +51,54 @@
         font-family: GoldenStateSerif;
         position: absolute;
         top:15%;
-        left: 39.1%;
+        left: 47.5%;
         color: red;
     }
     #gameGuard{
         font-family: GoldenStateSerif;
         position: absolute;
         top:15%;
-        left: 39.1%;
+        left: 47.1%;
         color: red;
     }
     #runButton
     {
         position: absolute;
-        top:35%;
-        left: 40%;
+        top:38%;
+        left: 48%;
     }
     #endButton
     {
         position: absolute;
-        top:38%;
-        left: 40.1%;
+        top:41%;
+        left: 48.1%;
     }
     #enterName
     {
         position: absolute;
         top:30%;
-        left: 37.1%;
+        left: 44.5%;
     }
     #enterNameLabel
     {
         position: absolute;
         top:28%;
-        left: 37.1%;
+        left: 44.5%;
         color: red;
     }
     #enterDataButton
     {
         position: absolute;
         top:30%;
-        left: 46%;
+        left: 53.5%;
     }
     
     </style>
   </head>
   <body>
     <canvas id="myCanvas" width="480" height="360"></canvas>
-    <canvas id="myCanvas2" width="480" height="320"></canvas>
+    <canvas id="myCanvas2" width="480" height="360"></canvas>
+    
 
 
     <button id="runButton">Start game</button>
@@ -107,13 +116,9 @@
 
     <p id = "gameEnd">GAME OVER</p>
     <p id = "gameGuard">GUARD INCOMING</p>
-    <p id = "fNameL">Enter Username:</p>
-    <form id = "userForm">
-        <input type="text" name ="fName" id="fName" size = "20">
-        <button type="submit" id = "submitName">Submit</button>
-    </form>
+    
     <script>
-        const form = document.getElementById('userForm');
+        /*const form = document.getElementById('userForm');
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -127,7 +132,7 @@
             .then(res => console.log(res))
             .catch(err => console.log(err))
             
-        });
+        });*/
 
         function saveUserName()
         {
@@ -152,6 +157,7 @@
         const enterName = document.getElementById("enterName");
         const enterNameLabel = document.getElementById("enterNameLabel");
         const gameGuardP = document.getElementById("gameGuard");
+        const enterDataButton = document.getElementById("enterDataButton");
 
         gameGuardP.style.display="none"; //Hidden by default.
         canvas2.style.display="none"; //Hidden by default.
@@ -159,6 +165,7 @@
         endButtonB.style.display="none"; //Hidden by default.
         enterName.style.display="none"; //Hidden by default.
         enterNameLabel.style.display="none"; //Hidden by default.
+        enterDataButton.style.display="none"; //Hidden by default.
 
         const ctx = canvas.getContext("2d");
         const ctx2 = canvas2.getContext("2d");
@@ -553,6 +560,7 @@
                 ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
                 flashCount++;
             }, 100);
+            enterDataButton.style.display = "block";
             endButtonB.style.display="block";
             //gameOver();
         }
@@ -614,7 +622,7 @@
             
             ctx.drawImage(imgGuard, moveX, 320, 40, 40);
 
-            moveX += 2; // Increment the x position. MUST STAY AS 1!!!
+            moveX += 1; // Increment the x position. MUST STAY AS 1!!!
 
             if(moveX == paddleX && (moveYPaddle < 320 && moveYPaddle > 280))
             {
